@@ -3,5 +3,9 @@
 version = 3
 
 [[package]]
-name = "LearningRust"
+name = "basics"
+version = "0.1.0"
+
+[[package]]
+name = "fractorial"
 version = "0.1.0"

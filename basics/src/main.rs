@@ -21,7 +21,7 @@ fn variables() {
 }
 
 fn ifelse() {
-    let x = 50;
+    let x = 10;
     let n = 20;
     // Does not require parenthesis
     if n > x { // requires blocks
@@ -31,6 +31,10 @@ fn ifelse() {
     } else {
         println!("The number is {}", x);
     }
+
+    let x = if x > 20 {"Yes"} else {"No"}; 
+    // Use shadowing to change x type and use if else as expression
+    println!("Is x greated than 20? A: {}", x);
 }
 
 fn compoundTypes() {
@@ -45,3 +49,11 @@ fn compoundTypes() {
     let array = [5;3]; // create an array of 3 elements with only the element 5
     println!("Array elements: 1:{0} 2:{1} 3:{2}", array[0], array[1], array[2]);
 }
+
+/*
+functions are declared with fn and wrapped in {}
+They can either be a statment or expression. A statment returns nothing while expression returns a value
+Paramenters are declared in the brackets using variable: type.
+Return values are specified using -> type after the brackets and before the {}
+A final return does not require a semi colon. Use this if its the final return
+ */

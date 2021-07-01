@@ -5,6 +5,7 @@ fn main() {
     compoundTypes();
     loops();
     ownership();
+    structs();
 }
 
 fn variables() {
@@ -129,17 +130,17 @@ fn ownership() {
 
     let s = String::from("hello"); // s comes into scope
     takes_ownership(s); // s's value moves into the function...
-    //println!("{}", s);                   // ... and so is no longer valid here
+                        //println!("{}", s);                   // ... and so is no longer valid here
 
     let x = 5; // x comes into scope
 
     makes_copy(x); // x would move into the function,
-    // but i32 is Copy, so it's okay to still to use x afterward
-    /*
-    Copy is a term that allows a value to be Copied and wont be Dropped on reassigning
-    Using this we can move around the ownership of pointer in memory and move it to different variables
-    If we do not to use this we can make refrences and borrow values
-    */
+                   // but i32 is Copy, so it's okay to still to use x afterward
+                   /*
+                   Copy is a term that allows a value to be Copied and wont be Dropped on reassigning
+                   Using this we can move around the ownership of pointer in memory and move it to different variables
+                   If we do not to use this we can make refrences and borrow values
+                   */
     let s1 = String::from("hello");
 
     let len = calculate_length(&s1); // Pass the pointer allow it to be borrowed and not take ownership
@@ -147,7 +148,7 @@ fn ownership() {
     println!("The length of '{}' is {}.", s1, len);
 
     /*
-    By defualt we can not modify something we have refrenced to. 
+    By defualt we can not modify something we have refrenced to.
     We must add &mut before to make it mutable
     We can not have more than 1 refrence at a time of a variable
     We would need to change its scope using {}
@@ -169,3 +170,39 @@ fn makes_copy(some_integer: i32) {
     // some_integer comes into scope
     println!("{}", some_integer);
 } // Here, some_integer goes out of scope. Nothing special happens.
+
+fn structs() {
+    // # types of structs: classic, tuple and unit
+    // You may initiate it using a random order
+    let student1 = Student {
+        name: String::from("Student1"),
+        remote: true,
+        level: 2,
+    };
+    // You may initiate it using normal order
+    let student2 = Student {
+        name: String::from("Student2"),
+        level: 1,
+        remote: false,
+    };
+    let marks1 = Grades('A', 'B', 'F', 'D', 0.0);
+    let marks2 = Grades('A', 'A', 'A', 'B', 1.0);
+    println!(
+        "{}, level {}. Remote: {}. Grades: {}, {}, {}, {}. Average: {}",
+        student1.name, student1.level, student1.remote, marks1.0, marks1.1, marks1.2, marks1.3, marks1.4
+    );
+    println!(
+        "{}, level {}. Remote: {}. Grades: {}, {}, {}, {}. Average: {}",
+        student2.name, student2.level, student2.remote, marks2.0, marks2.1, marks2.2, marks2.3, marks2.4
+    );
+}
+// A clasic struct
+struct Student {
+    name: String,
+    level: u8,
+    remote: bool,
+}
+// A tuple struct
+struct Grades(char, char, char, char, f32);
+// Unit struct
+//struct Unit;

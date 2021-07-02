@@ -1,4 +1,8 @@
 #![allow(non_snake_case)] // stop warning for not using snake case
+
+mod module;
+use crate::module::anotherModule;
+
 fn main() {
     variables();
     ifelse();
@@ -6,6 +10,9 @@ fn main() {
     loops();
     ownership();
     structs();
+    module::publicFunction();
+    module::anotherModule::moduleFunction();
+    anotherModule::moduleFunction();
 }
 
 fn variables() {

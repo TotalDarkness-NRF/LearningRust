@@ -1,7 +1,7 @@
 pub fn structs() {
     // # types of structs: classic, tuple and unit
     // You may initiate it using a random order
-    let student1 = Student {
+    let mut student1 = Student {
         name: String::from("Student1"),
         remote: true,
         level: 2,
@@ -38,6 +38,8 @@ pub fn structs() {
     println!("{}", student2.to_string());
     student1.graduate();
     student2.graduate();
+    student1.takeTest();
+    student2.submitAssignment();
 }
 // A clasic struct
 #[derive(Debug)]
@@ -80,5 +82,19 @@ impl Graduation for Student {
 
     fn canGraduate(&self) -> bool {
         self.level > 4
+    }
+}
+
+// We can also provide specific functions for a structure
+impl Student {
+    // Example of a mutable function. Only mutable varaibles of Student can use this
+    fn takeTest(&mut self) {
+        println!("Student {} takes a {} level test", self.name, self.level);
+        self.level += 1;
+        println!("Student increases to level {}", self.level);
+    }
+    // Example of a non mutable function. All instances of variables of Student can use this
+    fn submitAssignment(&self) {
+        println!("Student {} has submitted an assignment", self.name);
     }
 }

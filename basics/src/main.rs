@@ -7,6 +7,7 @@ mod compoundTypes;
 mod loops;
 mod ownership;
 mod structures;
+mod enums;
 use crate::module::anotherModule;
 
 fn main() {
@@ -19,6 +20,7 @@ fn main() {
     module::publicFunction();
     module::anotherModule::moduleFunction();
     anotherModule::moduleFunction();
+    enums::enums();
 }
 
 /*

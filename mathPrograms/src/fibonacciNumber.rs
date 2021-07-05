@@ -28,21 +28,24 @@ pub fn fibbonacciCalculate() {
         }
     }
 
-    let (fibbonnaciNumber, sequence) = fibbonnaci(number);
-
-    println!("{}", fibbonnaciNumber);
-    if showSequence { println!("{:?}", sequence) };
+    let sequence = fibbonnaci(number);
+    let fibbonnaciNumber = sequence.last();
+    
+    
+    if fibbonnaciNumber.is_some() { 
+        println!("Fibbonnaci number {} is {}", number, fibbonnaciNumber.unwrap());
+    }
+    if showSequence { println!("{:?}", sequence); }
 }
 
-fn fibbonnaci(n: u32) -> (u128, Vec<u128>) {
+fn fibbonnaci(n: u32) -> Vec<u128> {
     fibbonnaciRecursive(0, 1, 1, n,  &mut Vec::new())
 }
 
-fn fibbonnaciRecursive(x: u128, y: u128, count: u32, n: u32, sequence: &mut Vec<u128>) -> (u128,  Vec<u128>) {
-    if count == n {
-        sequence.push(x);
-        return (x, sequence.to_vec());
-    }
+fn fibbonnaciRecursive(x: u128, y: u128, count: u32, n: u32, sequence: &mut Vec<u128>) -> Vec<u128> {
     sequence.push(x);
+    if count == n {
+        return sequence.to_vec();
+    }
     fibbonnaciRecursive(y, x + y, count + 1, n, sequence)
 }

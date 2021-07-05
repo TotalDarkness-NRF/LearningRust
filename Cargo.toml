@@ -1,5 +1,5 @@
 [workspace]
 members = [
-    "fractorial",
-    "basics"
+    "basics",
+    "mathPrograms"
     ]

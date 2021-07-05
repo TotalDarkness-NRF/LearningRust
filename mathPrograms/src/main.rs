@@ -13,13 +13,20 @@ fn main() {
     println!("The fractorial of {0} is {1}", number, fractorial(number));
 }
 
-fn fractorial(n: u32) -> u32 {
+fn fractorial(n: u32) -> u128 {
     fractorialRecursive(1, n)
 }
 
 // I would normally use function overloading here but that is not a good idea for rust.
-
-fn fractorialRecursive(x: u32, n: u32) -> u32 {
-    if x >= n || x < 1 {return x};
+/*
+For fractorials numbers can become very large fast. Around 12 times it overflows
+Using u128 over u32 fixes now overflows above 34
+*/ 
+fn fractorialRecursive(x: u128, n: u32) -> u128 {
+    if x >= n.into() || x < 1 {return x};
     x * fractorialRecursive(x + 1, n)
 }
+
+//fn fractorialIterative(n:) {
+
+//}

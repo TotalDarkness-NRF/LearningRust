@@ -9,8 +9,8 @@ fn main() {
     let mut terminal = Terminal::getRaw();
     write!(terminal.terminal, "{}{}{}", screen::ToAlternateScreen, clear::All, cursor::Hide).unwrap();
     write!(terminal.terminal, "{}Red{}\n\r", color::Fg(color::Red), color::Fg(color::Reset)).unwrap();
-    let (xMax, yMax) = terminal_size().unwrap();
-    println!("{} {}", xMax, yMax);
+    let boundary = terminal.getBoundaries();
+    println!("{} {}", boundary.getX(), boundary.getY());
     let mut coords = TerminalCoordiante::new(20, 10);
     terminal.drawBox(&coords, &color::Green);
     coords.set(20, 3);
@@ -60,23 +60,31 @@ impl Terminal {
     pub fn new(terminal: RawTerminal<File>) -> Self {
         Terminal{terminal}
     }
+
     pub fn getRaw() -> Self {
         Terminal{terminal: get_tty().unwrap().into_raw_mode().unwrap()}
     }
 
+    fn write(&mut self, message: String) {
+        write!(self.terminal, "{}", message).unwrap();
+    }
+
     pub fn drawBox(&mut self, pos: &TerminalCoordiante, color: &dyn color::Color) {
-        write!(
-            self.terminal,
+        self.write(format!(
             "{}{}{} {}",
             cursor::Save,
             cursor::Goto(pos.getX(), pos.getY()),
             color::Bg(color),
-            cursor::Restore
-        )
-        .unwrap()
+            cursor::Restore)
+        );
     }
 
     pub fn eraseBox(&mut self, pos: &TerminalCoordiante) {
-        write!(self.terminal, "{} ", cursor::Goto(pos.getX(), pos.getY())).unwrap()
+        self.write(format!("{} ", cursor::Goto(pos.getX(), pos.getY())));
+    }
+
+    pub fn getBoundaries(&self) -> TerminalCoordiante {
+        let (x, y) = terminal_size().unwrap();
+        TerminalCoordiante::new(x, y)
     }
 }

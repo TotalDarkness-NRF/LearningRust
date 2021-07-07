@@ -33,7 +33,7 @@ impl Position {
         }
     }
 
-    pub fn set(&mut self, x: u16, y: u16) {
+    pub fn _set(&mut self, x: u16, y: u16) {
         self.setX(x);
         self.setY(y);
     }
@@ -41,4 +41,11 @@ impl Position {
     fn respectBoundary(&self, n: u16) -> bool {
         isInBoundary(self) && n > 0
     }
+}
+
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
 }

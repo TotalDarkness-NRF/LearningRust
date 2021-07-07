@@ -3,7 +3,7 @@ use std::io::{stdin, Write};
 use rand::{prelude::ThreadRng, thread_rng};
 use termion::{clear, color, cursor, event::Key, input::TermRead, screen};
 
-use crate::{character::Character, position::Position, terminal::{Terminal, getBoundaries}};
+use crate::{character::Character, position::{Position, Direction}, terminal::{Terminal, getBoundaries}};
 
 pub struct Game {
     character: Character,
@@ -24,7 +24,7 @@ impl Game {
 
     pub fn start(&mut self) {
         let stdin = stdin();
-        write!(self.terminal.terminal, "{}{}{}", screen::ToAlternateScreen, clear::All, cursor::Hide).unwrap();
+        self.terminal.write( format!("{}{}{}", screen::ToAlternateScreen, clear::All, cursor::Hide));
         for c in stdin.keys() {
             self.terminal.write(format!(
                 "{}{}",
@@ -45,7 +45,7 @@ impl Game {
                 Key::Down => println!("↓"),
                 Key::Backspace => println!("×"),
                 */
-                Key::Char('q') => break,
+                Key::Char('q') => {self.quit(); break},
                 Key::Char('w') => self.moveCharacter(Direction::Up),
                 Key::Char('a') => self.moveCharacter(Direction::Right),
                 Key::Char('s') => self.moveCharacter(Direction::Down),
@@ -71,11 +71,9 @@ impl Game {
             Direction::Right => self.character.moveRight(),
         }
     }
-}
 
-enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
+    fn quit(&mut self) {
+        self.terminal.write(format!("{}{}", cursor::Show, screen::ToMainScreen));
+        self.terminal.terminal.suspend_raw_mode().unwrap();
+    }
 }

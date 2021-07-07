@@ -9,10 +9,6 @@ pub struct Terminal {
 }
 
 impl Terminal {
-    pub fn new(terminal: RawTerminal<File>) -> Self {
-        Terminal{terminal}
-    }
-
     pub fn getRaw() -> Self {
         Terminal{terminal: get_tty().unwrap().into_raw_mode().unwrap()}
     }
@@ -37,9 +33,9 @@ impl Terminal {
         if isInBoundary(pos) {
             self.write(format!(
                 "{}{} {}",
-            cursor::Save, 
-            cursor::Goto(pos.getX(), pos.getY()),
-            cursor::Restore));
+                cursor::Save, 
+                cursor::Goto(pos.getX(), pos.getY()),
+                cursor::Restore));
         }   
     }
 }

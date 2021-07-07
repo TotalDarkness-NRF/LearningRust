@@ -46,10 +46,10 @@ impl Game {
                 Key::Backspace => println!("×"),
                 */
                 Key::Char('q') => break,
-                Key::Char('w') => self.character.moveUp(),
-                Key::Char('a') => self.character.moveRight(),
-                Key::Char('s') => self.character.moveDown(),
-                Key::Char('d') => self.character.moveLeft(),
+                Key::Char('w') => self.moveCharacter(Direction::Up),
+                Key::Char('a') => self.moveCharacter(Direction::Right),
+                Key::Char('s') => self.moveCharacter(Direction::Down),
+                Key::Char('d') => self.moveCharacter(Direction::Left),
                 _ => {}
             }
 
@@ -61,4 +61,21 @@ impl Game {
             self.terminal.terminal.flush().unwrap();
         }
     }
+
+    fn moveCharacter(&mut self, direction: Direction) {
+        self.terminal.eraseBox(&self.character.position);
+        match direction {
+            Direction::Up => self.character.moveUp(),
+            Direction::Down => self.character.moveDown(),
+            Direction::Left => self.character.moveLeft(),
+            Direction::Right => self.character.moveRight(),
+        }
+    }
+}
+
+enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
 }

@@ -35,7 +35,11 @@ impl Terminal {
 
     pub fn eraseBox(&mut self, pos: &Position) {
         if isInBoundary(pos) {
-            self.write(format!("{} ", cursor::Goto(pos.getX(), pos.getY())));
+            self.write(format!(
+                "{}{} {}",
+            cursor::Save, 
+            cursor::Goto(pos.getX(), pos.getY()),
+            cursor::Restore));
         }   
     }
 }

@@ -3,7 +3,7 @@ use std::io::{stdin, Write};
 use rand::{prelude::ThreadRng, thread_rng};
 use termion::{clear, color, cursor, event::Key, input::TermRead, screen};
 
-use crate::{character::Character, position::Position, terminal::Terminal};
+use crate::{character::Character, position::Position, terminal::{Terminal, getBoundaries}};
 
 pub struct Game {
     character: Character,
@@ -53,6 +53,10 @@ impl Game {
                 _ => {}
             }
 
+            let bound = getBoundaries();
+            self.terminal.write(format!("{} {} {} {}", 
+            self.character.position.getX(), self.character.position.getY(),
+            bound.getX(), bound.getY()));
             self.terminal.drawBox(&self.character.position, &color::Green);
             self.terminal.terminal.flush().unwrap();
         }

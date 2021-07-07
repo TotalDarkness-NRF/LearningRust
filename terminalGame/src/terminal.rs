@@ -22,7 +22,7 @@ impl Terminal {
     }
 
     pub fn drawBox(&mut self, pos: &Position, color: &dyn color::Color) {
-        if self.isInBoundary(pos) {
+        if isInBoundary(pos) {
             self.write(format!(
                 "{}{}{} {}",
                 cursor::Save,
@@ -34,21 +34,21 @@ impl Terminal {
     }
 
     pub fn eraseBox(&mut self, pos: &Position) {
-        if self.isInBoundary(pos) {
+        if isInBoundary(pos) {
             self.write(format!("{} ", cursor::Goto(pos.getX(), pos.getY())));
         }   
     }
+}
 
-    pub fn getBoundaries(&self) -> Position {
-        let (x, y) = terminal_size().unwrap();
-        Position::new(x, y)
-    }
+pub fn getBoundaries() -> Position {
+    let (x, y) = terminal_size().unwrap();
+    Position::new(x, y)
+}
 
-    pub fn isInBoundary(&self, pos: &Position) -> bool {
-        // When both are zero the program will panic
-        !(pos.getX() == 0 && pos.getY() == 0) && {
-            let boundary = self.getBoundaries();
-            boundary.getX() >= pos.getX() && boundary.getY() >= pos.getY()
-        }
+pub fn isInBoundary(pos: &Position) -> bool {
+    // When both are zero the program will panic
+    pos.getX() > 0 && pos.getY() > 0 && {
+        let boundary = getBoundaries();
+        pos.getX() < boundary.getX() && pos.getY() < boundary.getY()
     }
 }

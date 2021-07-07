@@ -1,3 +1,5 @@
+use crate::terminal::isInBoundary;
+
 pub struct Position {
     x: u16,
     y: u16,
@@ -8,7 +10,7 @@ impl Position {
         Position {x, y}
     }
     pub fn newOrigin() -> Self {
-        Position {x:1, y:1}
+        Position {x:1, y:2}
     }
 
     pub fn getX(&self) -> u16 {
@@ -20,15 +22,23 @@ impl Position {
     }
 
     pub fn setX(&mut self, x: u16) {
-        self.x = x;
+        if self.respectBoundary(x) && isInBoundary(&Position::new(x, self.y)) {
+            self.x = x;
+        }
     }
 
     pub fn setY(&mut self, y: u16) {
-        self.y = y;
+        if self.respectBoundary(y - 1) && isInBoundary(&Position::new(self.x, y)) {
+            self.y = y;
+        }
     }
 
     pub fn set(&mut self, x: u16, y: u16) {
-        self.x = x;
-        self.y = y;
+        self.setX(x);
+        self.setY(y);
+    }
+
+    fn respectBoundary(&self, n: u16) -> bool {
+        isInBoundary(self) && n > 0
     }
 }

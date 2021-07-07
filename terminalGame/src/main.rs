@@ -10,10 +10,9 @@ mod position;
 // using https://docs.rs/termion/1.5.6/termion/
 
 fn main() {
-    let mut  game = Game::new();
+    let mut game = Game::new();
     game.start();
-    // TODO sort this file
-    // TODO use randomness to draw the squares
+    //TODO clear character old once moved
     /*
     let mut terminal = Terminal::getRaw();
     let mut rng = rand::thread_rng();

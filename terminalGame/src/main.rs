@@ -13,9 +13,9 @@ fn main() {
     println!("{} {}", boundary.getX(), boundary.getY());
     let mut coords = TerminalCoordiante::new(20, 10);
     terminal.drawBox(&coords, &color::Green);
-    coords.set(20, 3);
+    coords.set(1, 0);
     terminal.drawBox(&coords, &color::Magenta);
-    terminal.eraseBox(&TerminalCoordiante::new(20, 10));
+    //terminal.eraseBox(&TerminalCoordiante::new(20, 10));
 }
 
 struct TerminalCoordiante {
@@ -46,6 +46,7 @@ impl TerminalCoordiante {
     pub fn setY(&mut self, y: u16) {
         self.y = y;
     }
+
     pub fn set(&mut self, x: u16, y: u16) {
         self.x = x;
         self.y = y;
@@ -70,21 +71,33 @@ impl Terminal {
     }
 
     pub fn drawBox(&mut self, pos: &TerminalCoordiante, color: &dyn color::Color) {
-        self.write(format!(
-            "{}{}{} {}",
-            cursor::Save,
-            cursor::Goto(pos.getX(), pos.getY()),
-            color::Bg(color),
-            cursor::Restore)
-        );
+        if self.isInBoundary(pos) {
+            self.write(format!(
+                "{}{}{} {}",
+                cursor::Save,
+                cursor::Goto(pos.getX(), pos.getY()),
+                color::Bg(color),
+                cursor::Restore)
+            );
+        }
     }
 
     pub fn eraseBox(&mut self, pos: &TerminalCoordiante) {
-        self.write(format!("{} ", cursor::Goto(pos.getX(), pos.getY())));
+        if self.isInBoundary(pos) {
+            self.write(format!("{} ", cursor::Goto(pos.getX(), pos.getY())));
+        }   
     }
 
     pub fn getBoundaries(&self) -> TerminalCoordiante {
         let (x, y) = terminal_size().unwrap();
         TerminalCoordiante::new(x, y)
+    }
+
+    pub fn isInBoundary(&self, pos: &TerminalCoordiante) -> bool {
+        // When both are zero the program will panic
+        !(pos.getX() == 0 && pos.getY() == 0) && {
+            let boundary = self.getBoundaries();
+            boundary.getX() >= pos.getX() && boundary.getY() >= pos.getY()
+        }
     }
 }

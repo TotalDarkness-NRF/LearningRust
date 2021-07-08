@@ -21,6 +21,22 @@ impl Position {
         self.y
     }
 
+    pub fn moveUp(&mut self) {
+        self.setY(self.y - 1);
+    }
+
+    pub fn moveDown(&mut self) {
+        self.setY(self.y + 1);
+    }
+
+    pub fn moveRight(&mut self) {
+        self.setX(self.x - 1);
+    }
+
+    pub fn moveLeft(&mut self) {
+        self.setX(self.x + 1);
+    }
+
     pub fn setX(&mut self, x: u16) {
         if self.respectBoundary(x) && isInBoundary(&Position::new(x, self.y)) {
             self.x = x;
@@ -48,4 +64,5 @@ pub enum Direction {
     Down,
     Left,
     Right,
+    None,
 }

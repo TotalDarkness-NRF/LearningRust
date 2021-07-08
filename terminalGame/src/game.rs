@@ -46,29 +46,19 @@ impl Game {
                 Key::Backspace => println!("×"),
                 */
                 Key::Char('q') => {self.quit(); break},
-                Key::Char('w') => self.moveCharacter(Direction::Up),
-                Key::Char('a') => self.moveCharacter(Direction::Right),
-                Key::Char('s') => self.moveCharacter(Direction::Down),
-                Key::Char('d') => self.moveCharacter(Direction::Left),
+                Key::Char('w') => self.character.moves(&mut self.terminal, Direction::Up),
+                Key::Char('a') => self.character.moves(&mut self.terminal, Direction::Right),
+                Key::Char('s') => self.character.moves(&mut self.terminal, Direction::Down),
+                Key::Char('d') => self.character.moves(&mut self.terminal, Direction::Left),
                 _ => {}
             }
 
             let bound = getBoundaries();
             self.terminal.write(format!("{} {} {} {}", 
-            self.character.position.getX(), self.character.position.getY(),
+            self.character.getPosition().getX(), self.character.getPosition().getY(),
             bound.getX(), bound.getY()));
-            self.terminal.drawBox(&self.character.position, &color::Green);
+            self.terminal.drawBox(&self.character.getPosition(), &color::Green);
             self.terminal.terminal.flush().unwrap();
-        }
-    }
-
-    fn moveCharacter(&mut self, direction: Direction) {
-        self.terminal.eraseBox(&self.character.position);
-        match direction {
-            Direction::Up => self.character.moveUp(),
-            Direction::Down => self.character.moveDown(),
-            Direction::Left => self.character.moveLeft(),
-            Direction::Right => self.character.moveRight(),
         }
     }
 

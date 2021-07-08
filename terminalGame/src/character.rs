@@ -25,4 +25,8 @@ impl Character {
     pub fn getPosition(&self) -> &Position {
         &self.position
     }
+
+    pub fn getWeapon(&mut self) -> &mut Weapon {
+        &mut self.weapon
+    }
 }

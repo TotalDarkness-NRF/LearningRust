@@ -9,6 +9,11 @@ impl Position {
     pub fn new(x: u16, y: u16) -> Self {
         Position {x, y}
     }
+
+    pub fn copy(position: &Position) -> Position {
+        Position::new(position.x, position.y)
+    }
+
     pub fn newOrigin() -> Self {
         Position {x:1, y:2}
     }

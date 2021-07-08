@@ -50,6 +50,22 @@ impl Game {
                 Key::Char('a') => self.character.moves(&mut self.terminal, Direction::Right),
                 Key::Char('s') => self.character.moves(&mut self.terminal, Direction::Down),
                 Key::Char('d') => self.character.moves(&mut self.terminal, Direction::Left),
+                Key::Ctrl('w') => {
+                    let position: Position = Position::copy(self.character.getPosition());
+                    self.character.getWeapon().shoot(&mut self.terminal, Direction::Up, position);
+                },
+                Key::Ctrl('a') => {
+                    let position: Position = Position::copy(self.character.getPosition());
+                    self.character.getWeapon().shoot(&mut self.terminal, Direction::Right, position);
+                },
+                Key::Ctrl('s') => {
+                    let position: Position = Position::copy(self.character.getPosition());
+                    self.character.getWeapon().shoot(&mut self.terminal, Direction::Down, position);
+                },
+                Key::Ctrl('d') => {
+                    let position: Position = Position::copy(self.character.getPosition());
+                    self.character.getWeapon().shoot(&mut self.terminal, Direction::Left, position);
+                },
                 _ => {}
             }
 

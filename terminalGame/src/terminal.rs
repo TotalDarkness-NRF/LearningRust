@@ -1,16 +1,22 @@
 use std::{fs::File, io::Write};
 
-use termion::{color, cursor, get_tty, raw::{IntoRawMode, RawTerminal}, terminal_size};
+use termion::{
+    color, cursor, get_tty,
+    raw::{IntoRawMode, RawTerminal},
+    terminal_size,
+};
 
 use crate::position::Position;
 
 pub struct Terminal {
-    pub terminal: RawTerminal<File>
+    pub terminal: RawTerminal<File>,
 }
 
 impl Terminal {
     pub fn getRaw() -> Self {
-        Terminal{terminal: get_tty().unwrap().into_raw_mode().unwrap()}
+        Terminal {
+            terminal: get_tty().unwrap().into_raw_mode().unwrap(),
+        }
     }
 
     pub fn write(&mut self, message: String) {
@@ -19,13 +25,13 @@ impl Terminal {
 
     pub fn drawBox(&mut self, pos: &Position, color: &dyn color::Color) {
         if isInBoundary(pos) {
-            self.write(format!(
-                "{}{}{} {}",
-                cursor::Save,
-                cursor::Goto(pos.getX(), pos.getY()),
-                color::Bg(color),
-                cursor::Restore)
-            );
+            self.write(restoreCursorWrite(pos, bgColor(color)));
+        }
+    }
+
+    pub fn drawChar(&mut self, pos: &Position, character: char) {
+        if isInBoundary(pos) {
+            self.write(restoreCursorWrite(pos, String::from(character)));
         }
     }
 
@@ -33,11 +39,26 @@ impl Terminal {
         if isInBoundary(pos) {
             self.write(format!(
                 "{}{} {}",
-                cursor::Save, 
+                cursor::Save,
                 cursor::Goto(pos.getX(), pos.getY()),
-                cursor::Restore));
-        }   
+                cursor::Restore
+            ));
+        }
     }
+}
+
+fn bgColor(color: &dyn color::Color) -> String {
+    format!("{}", color::Bg(color))
+}
+
+fn restoreCursorWrite(pos: &Position, message: String) -> String {
+    format!(
+        "{}{}{} {}",
+        cursor::Save,
+        cursor::Goto(pos.getX(), pos.getY()),
+        message,
+        cursor::Restore
+    )
 }
 
 pub fn getBoundaries() -> Position {

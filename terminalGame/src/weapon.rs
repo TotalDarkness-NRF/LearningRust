@@ -43,12 +43,14 @@ impl Weapon {
         }
     }
 
-    pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction) {
+    pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction, position: Position) {
         if self.ammo == 0 {
             self.reload();
         } else if self.clip > 0 {
             self.ammo -= 1;
-            self.weaponType.getBullet().moves(terminal, direction);
+            let bullet: &mut Bullet = self.weaponType.getBullet();
+            bullet.position = position;
+            bullet.moves(terminal, direction);
         }
     }
 
@@ -95,7 +97,6 @@ impl Bullet {
     
     pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
         terminal.eraseBox(&self.position);
-        terminal.write(self.icon.to_string());
         self.direction = direction;
         match self.direction {
             Direction::Up => self.position.moveUp(),
@@ -104,6 +105,7 @@ impl Bullet {
             Direction::Right => self.position.moveRight(),
             Direction::None => (),
         }
+        terminal.drawChar(&self.position, self.icon);
     }
 
     pub fn update(&mut self, terminal: &mut Terminal) {

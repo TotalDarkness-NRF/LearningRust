@@ -1,25 +1,28 @@
-use crate::position::Position;
+use crate::{position::{Direction, Position}, terminal::Terminal, weapon::Weapon};
 
 pub struct Character {
-    pub position: Position,
-    pub health: u8,
+    position: Position,
+    health: u8,
+    weapon: Weapon,
 }
 
 impl Character {
     pub fn create(position: Position) -> Self {
-        Character{position, health: 20}
+        Character{position, health: 20, weapon: Weapon::createPistol()}
     }
 
-    pub fn moveUp(&mut self) {
-        self.position.setY(self.position.getY() - 1);
+    pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
+        terminal.eraseBox(&self.position);
+        match direction {
+            Direction::Up => self.position.moveUp(),
+            Direction::Down => self.position.moveDown(),
+            Direction::Left => self.position.moveLeft(),
+            Direction::Right => self.position.moveRight(),
+            Direction::None => (),
+        }
     }
-    pub fn moveDown(&mut self) {
-        self.position.setY(self.position.getY() + 1);
-    }
-    pub fn moveRight(&mut self) {
-        self.position.setX(self.position.getX() - 1);
-    }
-    pub fn moveLeft(&mut self) {
-        self.position.setX(self.position.getX() + 1);
+
+    pub fn getPosition(&self) -> &Position {
+        &self.position
     }
 }

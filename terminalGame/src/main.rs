@@ -6,6 +6,7 @@ mod game;
 mod character;
 mod terminal;
 mod position;
+mod weapon;
 
 // using https://docs.rs/termion/1.5.6/termion/
 

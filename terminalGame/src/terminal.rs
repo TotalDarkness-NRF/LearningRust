@@ -1,10 +1,6 @@
 use std::{fs::File, io::Write};
 
-use termion::{
-    color, cursor, get_tty,
-    raw::{IntoRawMode, RawTerminal},
-    terminal_size,
-};
+use termion::{color::{self, Color}, cursor, get_tty, raw::{IntoRawMode, RawTerminal}, terminal_size};
 
 use crate::position::Position;
 
@@ -23,7 +19,7 @@ impl Terminal {
         write!(self.terminal, "{}", message).unwrap();
     }
 
-    pub fn drawBox(&mut self, pos: &Position, color: &dyn color::Color) {
+    pub fn drawBox(&mut self, pos: &Position, color: &dyn Color) {
         if isInBoundary(pos) {
             self.write(restoreCursorWrite(pos, bgColor(color)));
         }

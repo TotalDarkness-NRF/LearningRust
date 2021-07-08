@@ -15,7 +15,7 @@ pub struct Game {
 impl Game {
     pub fn new() -> Self {
         Game {
-            character: Character::create(Position::newOrigin()),
+            character: Character::create(Position::newOrigin(), Box::new(color::LightRed)),
             points: 0,
             terminal: Terminal::getRaw(),
             rng: thread_rng(),
@@ -73,7 +73,7 @@ impl Game {
             self.terminal.write(format!("{} {} {} {}", 
             self.character.getPosition().getX(), self.character.getPosition().getY(),
             bound.getX(), bound.getY()));
-            self.terminal.drawBox(&self.character.getPosition(), &color::Green);
+            self.terminal.drawBox(&self.character.getPosition(), self.character.getColor());
             self.terminal.terminal.flush().unwrap();
         }
     }

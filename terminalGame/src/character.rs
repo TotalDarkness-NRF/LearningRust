@@ -1,14 +1,17 @@
+use termion::color::Color;
+
 use crate::{position::{Direction, Position}, terminal::Terminal, weapon::Weapon};
 
 pub struct Character {
     position: Position,
     health: u8,
     weapon: Weapon,
+    color: Box<dyn Color>,
 }
 
 impl Character {
-    pub fn create(position: Position) -> Self {
-        Character{position, health: 20, weapon: Weapon::createPistol()}
+    pub fn create(position: Position, color: Box<dyn Color>) -> Self {
+        Character{position, health: 20, weapon: Weapon::createPistol(), color}
     }
 
     pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
@@ -24,6 +27,10 @@ impl Character {
 
     pub fn getPosition(&self) -> &Position {
         &self.position
+    }
+
+    pub fn getColor(&self) -> &dyn Color {
+        self.color.as_ref()
     }
 
     pub fn getWeapon(&mut self) -> &mut Weapon {

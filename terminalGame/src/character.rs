@@ -9,6 +9,13 @@ pub struct Character {
     color: Box<dyn Color>,
 }
 
+impl ToString for Character {
+    fn to_string(&self) -> String {
+        format!("x:{} y:{} health:{} {}",
+        self.position.getX(), self.position.getY(), self.health, self.weapon.to_string())
+    }
+}
+
 impl Character {
     pub fn create(position: Position, color: Box<dyn Color>) -> Self {
         Character{position, health: 20, weapon: Weapon::createPistol(), color}
@@ -23,6 +30,10 @@ impl Character {
             Direction::Right => {self.position.moveRight();},
             Direction::None => (),
         }
+    }
+
+    pub fn draw(&self, terminal: &mut Terminal) {
+        terminal.drawBox(&self.position, self.getColor())
     }
 
     pub fn getPosition(&self) -> &Position {

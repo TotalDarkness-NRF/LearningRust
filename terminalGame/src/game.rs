@@ -71,10 +71,9 @@ impl Game {
             }
 
             let bound = getBoundaries();
-            self.terminal.write(format!("{} {} {} {}", 
-            self.character.getPosition().getX(), self.character.getPosition().getY(),
-            bound.getX(), bound.getY()));
-            self.terminal.drawBox(&self.character.getPosition(), self.character.getColor());
+            self.terminal.write(format!("{} {} {}",
+            bound.getX(), bound.getY(), self.character.to_string()));
+            self.character.draw(&mut self.terminal);
             self.character.getWeapon().updateBullets(&mut self.terminal);
             self.terminal.terminal.flush().unwrap();
         }

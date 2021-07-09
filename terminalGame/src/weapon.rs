@@ -6,7 +6,14 @@ pub struct Weapon {
     clipSize: u16,
     fallOff: bool,
     weaponType: WeaponType,
-    bulletsShot: Vec<Bullet>,
+    pub bulletsShot: Vec<Bullet>,
+}
+
+impl ToString for Weapon {
+    fn to_string(&self) -> String {
+        format!("ammo:{} clip:{} falloff:{} type:{} bulletsShot:{}",
+        self.ammo, self.clip, self.fallOff, self.weaponType.getType(), self.bulletsShot.len())
+    }
 }
 
 impl Weapon {
@@ -46,11 +53,11 @@ impl Weapon {
     pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction, position: Position) {
         if self.ammo == 0 {
             self.reload();
-        } else if self.clip > 0 {
+        } else {
             self.ammo -= 1;
             let bullet: Bullet = self.weaponType.getBullet();
             self.bulletsShot.push(bullet);
-            let bullet: &mut Bullet = self.bulletsShot.first_mut().unwrap();
+            let bullet: &mut Bullet = self.bulletsShot.last_mut().unwrap();
             bullet.position = position;
             bullet.moves(terminal, direction);
         }
@@ -87,12 +94,20 @@ enum WeaponType {
 }
 
 impl WeaponType {
-    pub fn getBullet(&self) -> Bullet {
+    fn getBullet(&self) -> Bullet {
         match self {
             WeaponType::Pistol(bullet) => bullet.copy(),
             WeaponType::Shotgun(bullet) => bullet.copy(),
             WeaponType::Bow(arrow) => arrow.copy(),
         }
+    }
+
+    fn getType(&self) -> String {
+        match self {
+            WeaponType::Pistol(_) => "Pistol",
+            WeaponType::Shotgun(_) => "Shotgun",
+            WeaponType::Bow(_) => "Bow",
+        }.to_string()
     }
 }
 

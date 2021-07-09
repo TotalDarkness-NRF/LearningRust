@@ -1,11 +1,11 @@
 use std::{fs::File, io::Write};
 
-use termion::{color::{self, Color}, cursor, get_tty, raw::{IntoRawMode, RawTerminal}, terminal_size};
+use termion::{clear, color::{self, Color}, cursor, get_tty, raw::{IntoRawMode, RawTerminal}, screen, terminal_size};
 
 use crate::position::Position;
 
 pub struct Terminal {
-    pub terminal: RawTerminal<File>,
+    terminal: RawTerminal<File>,
 }
 
 impl Terminal {
@@ -43,6 +43,24 @@ impl Terminal {
             );
             self.write(cursor::Restore.to_string());
         }
+    }
+    
+    pub fn flush(&mut self) {
+        self.terminal.flush().unwrap();
+    }
+
+    pub fn begin(&mut self) {
+        self.write(format!(
+            "{}{}{}",
+            screen::ToAlternateScreen,
+            clear::All,
+            cursor::Hide
+        ));
+    }
+
+    pub fn exit(&mut self) {
+        self.write(format!("{}{}", cursor::Show, screen::ToMainScreen));
+        self.terminal.suspend_raw_mode().unwrap();
     }
 
 }

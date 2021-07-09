@@ -5,7 +5,7 @@ pub trait Character {
     fn moves(&mut self, terminal: &mut Terminal, direction: Direction);
     fn update(&mut self, terminal: &mut Terminal);
     fn draw(&self, terminal: &mut Terminal);
-    fn attack(&mut self, terminal: &mut Terminal, direction: Direction);
+    fn attack(&mut self, direction: Direction);
     fn getPosition(&self) -> &Position;
     fn getColor(&self) -> &dyn Color;
     fn getWeapon(&mut self) -> &mut Weapon;

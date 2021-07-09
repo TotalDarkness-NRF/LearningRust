@@ -1,4 +1,4 @@
-use crate::terminal::isInBoundary;
+use crate::terminal::Terminal;
 
 pub struct Position {
     x: u16,
@@ -53,9 +53,7 @@ impl Position {
     }
 
     pub fn set(&mut self, x: u16, y: u16) -> bool {
-        if self.respectBoundary(x)
-        && self.respectBoundary(y - 1)
-        && isInBoundary(&Position::new(x, y)) {
+        if self.respectBoundary(x, y) {
             self.x = x;
             self.y = y;
             return true;
@@ -63,8 +61,17 @@ impl Position {
         false
     }
 
-    fn respectBoundary(&self, n: u16) -> bool {
-        isInBoundary(self) && n > 0
+    fn respectBoundary(&self, x: u16, y: u16) -> bool {
+        // Check current and future positions
+        self.isInBoundary() && x > 0 && y > 1 && Position::new(x, y).isInBoundary()
+    }
+
+    pub fn isInBoundary(&self) -> bool {
+        // When both are zero the program will panic
+        self.x > 0 && self.y > 0 && {
+            let boundary = Terminal::getBoundaries();
+            self.x <= boundary.x && self.y <= boundary.y
+        }
     }
 }
 

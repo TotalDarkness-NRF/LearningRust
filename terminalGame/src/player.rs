@@ -17,7 +17,7 @@ impl ToString for Player {
 
 impl Character for Player {
     fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
-        terminal.eraseBox(&self.position);
+        terminal.eraseBox(&self.position); // TODO see if we can have this somewhere else
         match direction {
             Direction::Up => {self.position.moveUp();},
             Direction::Down => {self.position.moveDown();},
@@ -48,9 +48,9 @@ impl Character for Player {
         &mut self.weapon
     }
 
-    fn attack(&mut self, terminal: &mut Terminal, direction: Direction) {
+    fn attack(&mut self, direction: Direction) {
         let position: Position = self.position.clone();
-        self.getWeapon().shoot(terminal, direction, position)
+        self.getWeapon().shoot(direction, position)
     }
 }
 

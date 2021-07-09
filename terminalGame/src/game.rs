@@ -8,7 +8,7 @@ use crate::{
     controls::Controls,
     player::Player,
     position::{Direction, Position},
-    terminal::{getBoundaries, Terminal},
+    terminal::Terminal,
 };
 
 pub struct Game {
@@ -42,7 +42,7 @@ impl Game {
             ));
             self.handleKey(key.unwrap());
 
-            let bound = getBoundaries();
+            let bound = Terminal::getBoundaries();
             self.terminal.write(format!(
                 "{} {} {}",
                 bound.getX(),
@@ -67,13 +67,13 @@ impl Game {
         } else if key == controls.right {
             self.character.moves(&mut self.terminal, Direction::Right);
         } else if key == controls.attackUp {
-            self.character.attack(&mut self.terminal, Direction::Up);
+            self.character.attack(Direction::Up);
         } else if key == controls.attackLeft {
-            self.character.attack(&mut self.terminal, Direction::Left);
+            self.character.attack(Direction::Left);
         } else if key == controls.attackDown {
-            self.character.attack(&mut self.terminal, Direction::Down);
+            self.character.attack(Direction::Down);
         } else if key == controls.attackRight {
-            self.character.attack(&mut self.terminal, Direction::Right);
+            self.character.attack(Direction::Right);
         }
     }
 

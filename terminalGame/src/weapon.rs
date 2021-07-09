@@ -50,8 +50,7 @@ impl Weapon {
         }
     }
 
-    pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction, position: Position) {
-        // TODO fix shooting into boundaries if right beside
+    pub fn shoot(&mut self, direction: Direction, position: Position) {
         if self.ammo == 0 {
             self.reload();
         } else {
@@ -98,9 +97,9 @@ enum WeaponType {
 impl WeaponType {
     fn getBullet(&self) -> Bullet {
         match self {
-            WeaponType::Pistol(bullet) => bullet.copy(),
-            WeaponType::Shotgun(bullet) => bullet.copy(),
-            WeaponType::Bow(arrow) => arrow.copy(),
+            WeaponType::Pistol(bullet) => bullet.copyTemplate(),
+            WeaponType::Shotgun(bullet) => bullet.copyTemplate(),
+            WeaponType::Bow(arrow) => arrow.copyTemplate(),
         }
     }
 
@@ -126,7 +125,7 @@ impl Bullet {
         Bullet {direction: Direction::None, position: Position::new(0, 0), timeAlive: 0, damage, icon}
     }
 
-    fn copy(&self) -> Self {
+    fn copyTemplate(&self) -> Self {
         Bullet::new(self.damage, self.icon)
     }
 
@@ -155,10 +154,6 @@ impl Bullet {
         }
     }
 
-    pub fn getDirection(&self) -> &Direction {
-        &self.direction
-    }
-
     pub fn setDiection(&mut self, dir: Direction) {
         self.direction = dir;
     }
@@ -169,17 +164,5 @@ impl Bullet {
 
     pub fn setPosition(&mut self, pos: Position) {
         self.position = pos;
-    }
-
-    pub fn getTimeAlive(&self) -> u16 {
-        self.timeAlive
-    }
-
-    pub fn getDamage(&self) -> u8 {
-        self.damage
-    }
-
-    pub fn getIcon(&self) -> char {
-        self.icon
     }
 }

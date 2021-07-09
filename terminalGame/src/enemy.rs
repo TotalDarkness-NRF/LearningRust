@@ -1,6 +1,5 @@
 use termion::color::Color;
-
-use crate::{character::Character, position::Position, terminal::Terminal, weapon::Weapon};
+use crate::{character::Character, position::{Direction, Position}, terminal::Terminal, weapon::Weapon};
 
 pub struct Enemy {
     position: Position,
@@ -10,11 +9,11 @@ pub struct Enemy {
 }
 
 impl Character for Enemy {
-    fn moves(&mut self, terminal: &mut crate::terminal::Terminal, direction: crate::position::Direction) {
+    fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
         todo!()
     }
 
-    fn update(&mut self, terminal: &mut crate::terminal::Terminal) {
+    fn update(&mut self, terminal: &mut Terminal) {
         todo!()
     }
 
@@ -34,7 +33,7 @@ impl Character for Enemy {
         &mut self.weapon
     }
 
-    fn attack(&mut self, terminal: &mut Terminal, direction: crate::position::Direction) {
+    fn attack(&mut self, direction: Direction) {
         todo!()
     }
 }

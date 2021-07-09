@@ -32,7 +32,7 @@ impl Terminal {
     }
     
     pub fn restoreCursorWrite(&mut self, pos: &Position, message: String) {
-        if isInBoundary(pos) {
+        if pos.isInBoundary() {
             self.write(
         format!(
                 "{}{}{}",
@@ -63,17 +63,8 @@ impl Terminal {
         self.terminal.suspend_raw_mode().unwrap();
     }
 
-}
-
-pub fn getBoundaries() -> Position {
-    let (x, y) = terminal_size().unwrap();
-    Position::new(x, y)
-}
-
-pub fn isInBoundary(pos: &Position) -> bool {
-    // When both are zero the program will panic
-    pos.getX() > 0 && pos.getY() > 0 && {
-        let boundary = getBoundaries();
-        pos.getX() < boundary.getX() && pos.getY() < boundary.getY()
+    pub fn getBoundaries() -> Position {
+        let (x, y) = terminal_size().unwrap();
+        Position::new(x, y)
     }
 }

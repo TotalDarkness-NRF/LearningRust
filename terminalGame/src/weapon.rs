@@ -48,7 +48,9 @@ impl Weapon {
             self.reload();
         } else if self.clip > 0 {
             self.ammo -= 1;
-            let bullet: &mut Bullet = self.weaponType.getBullet();
+            let bullet: Bullet = self.weaponType.getBullet();
+            self.bulletsShot.push(bullet);
+            let bullet: &mut Bullet = self.bulletsShot.first_mut().unwrap();
             bullet.position = position;
             bullet.moves(terminal, direction);
         }
@@ -60,6 +62,22 @@ impl Weapon {
             self.ammo = self.clipSize;
         }
     }
+
+    pub fn updateBullets(&mut self, terminal: &mut Terminal) {
+        // TODO bullets dont get all updated. Only the most recent does
+        let mut index: usize = 0;
+        let mut toRemove: Vec<usize> = Vec::new();
+        for bullet in self.bulletsShot.iter_mut() {
+            if !bullet.update(terminal) {
+                toRemove.push(index);
+            }
+            index += 1;
+        }
+        for index in toRemove {
+            let bullet = self.bulletsShot.remove(index);
+            terminal.eraseBox(bullet.getPosition());
+        }
+    }
 }
 
 enum WeaponType {
@@ -69,11 +87,11 @@ enum WeaponType {
 }
 
 impl WeaponType {
-    pub fn getBullet(&mut self) -> &mut Bullet {
+    pub fn getBullet(&self) -> Bullet {
         match self {
-            WeaponType::Pistol(bullet) => bullet,
-            WeaponType::Shotgun(bullet) => bullet,
-            WeaponType::Bow(arrow) => arrow,
+            WeaponType::Pistol(bullet) => bullet.copy(),
+            WeaponType::Shotgun(bullet) => bullet.copy(),
+            WeaponType::Bow(arrow) => arrow.copy(),
         }
     }
 }
@@ -91,27 +109,32 @@ impl Bullet {
         Bullet {direction: Direction::None, position: Position::new(0, 0), timeAlive: 0, damage, icon}
     }
 
+    fn copy(&self) -> Self {
+        Bullet::new(self.damage, self.icon)
+    }
+
     pub fn increaseTime(&mut self) {
         self.timeAlive += 1;
     }
     
-    pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
+    pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) -> bool{
         terminal.eraseBox(&self.position);
         self.direction = direction;
-        match self.direction {
+        let hasMoved = match self.direction {
             Direction::Up => self.position.moveUp(),
             Direction::Down => self.position.moveDown(),
             Direction::Left => self.position.moveLeft(),
             Direction::Right => self.position.moveRight(),
-            Direction::None => (),
-        }
+            Direction::None => false,
+        };
         terminal.drawChar(&self.position, self.icon);
+        hasMoved
     }
 
-    pub fn update(&mut self, terminal: &mut Terminal) {
+    pub fn update(&mut self, terminal: &mut Terminal) -> bool {
         self.increaseTime();
         match self.direction {
-            Direction::None => self.timeAlive = 0,
+            Direction::None => {self.timeAlive = 0; return false;},
             Direction::Up => self.moves(terminal, Direction::Up),
             Direction::Down => self.moves(terminal, Direction::Down),
             Direction::Left => self.moves(terminal, Direction::Left),

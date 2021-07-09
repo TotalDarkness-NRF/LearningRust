@@ -17,10 +17,10 @@ impl Character {
     pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) {
         terminal.eraseBox(&self.position);
         match direction {
-            Direction::Up => self.position.moveUp(),
-            Direction::Down => self.position.moveDown(),
-            Direction::Left => self.position.moveLeft(),
-            Direction::Right => self.position.moveRight(),
+            Direction::Up => {self.position.moveUp();},
+            Direction::Down => {self.position.moveDown();},
+            Direction::Left => {self.position.moveLeft();},
+            Direction::Right => {self.position.moveRight();},
             Direction::None => (),
         }
     }

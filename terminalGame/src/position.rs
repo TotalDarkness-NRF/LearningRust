@@ -26,37 +26,38 @@ impl Position {
         self.y
     }
 
-    pub fn moveUp(&mut self) {
-        self.setY(self.y - 1);
+    pub fn moveUp(&mut self) -> bool {
+        self.setY(self.y - 1)
     }
 
-    pub fn moveDown(&mut self) {
-        self.setY(self.y + 1);
+    pub fn moveDown(&mut self) -> bool {
+        self.setY(self.y + 1)
     }
 
-    pub fn moveRight(&mut self) {
-        self.setX(self.x - 1);
+    pub fn moveRight(&mut self) -> bool {
+        self.setX(self.x - 1)
     }
 
-    pub fn moveLeft(&mut self) {
-        self.setX(self.x + 1);
+    pub fn moveLeft(&mut self) -> bool {
+        self.setX(self.x + 1)
     }
 
-    pub fn setX(&mut self, x: u16) {
-        if self.respectBoundary(x) && isInBoundary(&Position::new(x, self.y)) {
+    pub fn setX(&mut self, x: u16) -> bool {
+        self.set(x, self.y)
+    }
+
+    pub fn setY(&mut self, y: u16) -> bool {
+        self.set(self.x, y)
+    }
+
+    pub fn set(&mut self, x: u16, y: u16) -> bool {
+        if self.respectBoundary(x) && isInBoundary(&Position::new(x, self.y))
+        && self.respectBoundary(y - 1) && isInBoundary(&Position::new(self.x, y)) {
             self.x = x;
-        }
-    }
-
-    pub fn setY(&mut self, y: u16) {
-        if self.respectBoundary(y - 1) && isInBoundary(&Position::new(self.x, y)) {
             self.y = y;
+            return true;
         }
-    }
-
-    pub fn _set(&mut self, x: u16, y: u16) {
-        self.setX(x);
-        self.setY(y);
+        false
     }
 
     fn respectBoundary(&self, n: u16) -> bool {

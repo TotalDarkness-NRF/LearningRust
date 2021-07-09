@@ -25,6 +25,7 @@ impl Game {
     pub fn start(&mut self) {
         let stdin = stdin();
         self.terminal.write( format!("{}{}{}", screen::ToAlternateScreen, clear::All, cursor::Hide));
+        // TODO the game only updates during key inputs
         for c in stdin.keys() {
             self.terminal.write(format!(
                 "{}{}",
@@ -74,6 +75,7 @@ impl Game {
             self.character.getPosition().getX(), self.character.getPosition().getY(),
             bound.getX(), bound.getY()));
             self.terminal.drawBox(&self.character.getPosition(), self.character.getColor());
+            self.character.getWeapon().updateBullets(&mut self.terminal);
             self.terminal.terminal.flush().unwrap();
         }
     }

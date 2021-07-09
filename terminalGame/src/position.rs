@@ -10,7 +10,7 @@ impl Position {
         Position {x, y}
     }
 
-    pub fn copy(position: &Position) -> Position {
+    pub fn copy(position: &Position) -> Self {
         Position::new(position.x, position.y)
     }
 

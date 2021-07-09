@@ -20,7 +20,7 @@ impl Terminal {
     }
 
     pub fn drawBox(&mut self, pos: &Position, color: &dyn Color) {
-        self.restoreCursorWrite(pos, bgColor(color));
+        self.restoreCursorWrite(pos, format!("{} ", color::Bg(color)));
     }
 
     pub fn drawChar(&mut self, pos: &Position, character: char) {
@@ -41,14 +41,10 @@ impl Terminal {
                 message
                 )
             );
-            self.write(format!("{}", cursor::Restore));
+            self.write(cursor::Restore.to_string());
         }
     }
 
-}
-
-fn bgColor(color: &dyn color::Color) -> String {
-    format!("{} ", color::Bg(color))
 }
 
 pub fn getBoundaries() -> Position {

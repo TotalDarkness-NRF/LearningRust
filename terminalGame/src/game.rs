@@ -73,8 +73,7 @@ impl Game {
             let bound = getBoundaries();
             self.terminal.write(format!("{} {} {}",
             bound.getX(), bound.getY(), self.character.to_string()));
-            self.character.draw(&mut self.terminal);
-            self.character.getWeapon().updateBullets(&mut self.terminal);
+            self.character.update(&mut self.terminal);
             self.terminal.terminal.flush().unwrap();
         }
     }

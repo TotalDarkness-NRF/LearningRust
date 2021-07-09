@@ -6,7 +6,7 @@ pub struct Weapon {
     clipSize: u16,
     fallOff: bool,
     weaponType: WeaponType,
-    pub bulletsShot: Vec<Bullet>,
+    bulletsShot: Vec<Bullet>,
 }
 
 impl ToString for Weapon {
@@ -51,15 +51,16 @@ impl Weapon {
     }
 
     pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction, position: Position) {
+        // TODO fix shooting causing overwrite of previous bullets on screen, not from the vector
         if self.ammo == 0 {
             self.reload();
         } else {
             self.ammo -= 1;
-            let bullet: Bullet = self.weaponType.getBullet();
+            let mut bullet: Bullet = self.weaponType.getBullet();
+            bullet.setPosition(position);
+            bullet.setDiection(direction);
+            bullet.update(terminal);
             self.bulletsShot.push(bullet);
-            let bullet: &mut Bullet = self.bulletsShot.last_mut().unwrap();
-            bullet.position = position;
-            bullet.moves(terminal, direction);
         }
     }
 
@@ -71,7 +72,6 @@ impl Weapon {
     }
 
     pub fn updateBullets(&mut self, terminal: &mut Terminal) {
-        // TODO bullets dont get all updated. Only the most recent does
         let mut index: usize = 0;
         let mut toRemove: Vec<usize> = Vec::new();
         for bullet in self.bulletsShot.iter_mut() {
@@ -111,7 +111,7 @@ impl WeaponType {
     }
 }
 
-pub struct Bullet {
+struct Bullet {
     direction: Direction,
     position: Position,
     timeAlive: u16,
@@ -132,9 +132,8 @@ impl Bullet {
         self.timeAlive += 1;
     }
     
-    pub fn moves(&mut self, terminal: &mut Terminal, direction: Direction) -> bool{
+    pub fn moves(&mut self, terminal: &mut Terminal) -> bool {
         terminal.eraseBox(&self.position);
-        self.direction = direction;
         let hasMoved = match self.direction {
             Direction::Up => self.position.moveUp(),
             Direction::Down => self.position.moveDown(),
@@ -142,7 +141,7 @@ impl Bullet {
             Direction::Right => self.position.moveRight(),
             Direction::None => false,
         };
-        terminal.drawChar(&self.position, self.icon);
+        if hasMoved {terminal.drawChar(&self.position, self.icon)};
         hasMoved
     }
 
@@ -150,10 +149,7 @@ impl Bullet {
         self.increaseTime();
         match self.direction {
             Direction::None => {self.timeAlive = 0; return false;},
-            Direction::Up => self.moves(terminal, Direction::Up),
-            Direction::Down => self.moves(terminal, Direction::Down),
-            Direction::Left => self.moves(terminal, Direction::Left),
-            Direction::Right => self.moves(terminal, Direction::Right),
+            _ => self.moves(terminal),
         }
     }
 
@@ -161,8 +157,16 @@ impl Bullet {
         &self.direction
     }
 
+    pub fn setDiection(&mut self, dir: Direction) {
+        self.direction = dir;
+    }
+
     pub fn getPosition(&self) -> &Position {
         &self.position
+    }
+
+    pub fn setPosition(&mut self, pos: Position) {
+        self.position = pos;
     }
 
     pub fn getTimeAlive(&self) -> u16 {

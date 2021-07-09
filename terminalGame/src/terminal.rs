@@ -20,41 +20,35 @@ impl Terminal {
     }
 
     pub fn drawBox(&mut self, pos: &Position, color: &dyn Color) {
-        if isInBoundary(pos) {
-            self.write(restoreCursorWrite(pos, bgColor(color)));
-        }
+        self.restoreCursorWrite(pos, bgColor(color));
     }
 
     pub fn drawChar(&mut self, pos: &Position, character: char) {
-        if isInBoundary(pos) {
-            self.write(restoreCursorWrite(pos, String::from(character)));
-        }
+        self.restoreCursorWrite(pos, String::from(character));
     }
 
     pub fn eraseBox(&mut self, pos: &Position) {
+        self.restoreCursorWrite(pos, "".to_string());
+    }
+    
+    fn restoreCursorWrite(&mut self, pos: &Position, message: String) {
         if isInBoundary(pos) {
-            self.write(format!(
-                "{}{} {}",
+            self.write(
+        format!(
+                "{}{}{} {}",
                 cursor::Save,
                 cursor::Goto(pos.getX(), pos.getY()),
+                message,
                 cursor::Restore
-            ));
+                )
+            );
         }
     }
+
 }
 
 fn bgColor(color: &dyn color::Color) -> String {
     format!("{}", color::Bg(color))
-}
-
-fn restoreCursorWrite(pos: &Position, message: String) -> String {
-    format!(
-        "{}{}{} {}",
-        cursor::Save,
-        cursor::Goto(pos.getX(), pos.getY()),
-        message,
-        cursor::Restore
-    )
 }
 
 pub fn getBoundaries() -> Position {

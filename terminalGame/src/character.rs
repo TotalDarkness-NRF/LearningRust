@@ -32,6 +32,11 @@ impl Character {
         }
     }
 
+    pub fn update(&mut self, terminal: &mut Terminal) {
+        self.draw(terminal);
+        self.weapon.updateBullets(terminal);
+    }
+
     pub fn draw(&self, terminal: &mut Terminal) {
         terminal.drawBox(&self.position, self.getColor())
     }

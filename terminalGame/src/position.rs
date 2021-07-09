@@ -51,8 +51,9 @@ impl Position {
     }
 
     pub fn set(&mut self, x: u16, y: u16) -> bool {
-        if self.respectBoundary(x) && isInBoundary(&Position::new(x, self.y))
-        && self.respectBoundary(y - 1) && isInBoundary(&Position::new(self.x, y)) {
+        if self.respectBoundary(x)
+        && self.respectBoundary(y - 1)
+        && isInBoundary(&Position::new(x, y)) {
             self.x = x;
             self.y = y;
             return true;

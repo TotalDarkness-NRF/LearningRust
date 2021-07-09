@@ -51,7 +51,7 @@ impl Weapon {
     }
 
     pub fn shoot(&mut self, terminal: &mut Terminal, direction: Direction, position: Position) {
-        // TODO fix shooting causing overwrite of previous bullets on screen, not from the vector
+        // TODO fix shooting into boundaries if right beside
         if self.ammo == 0 {
             self.reload();
         } else {
@@ -59,12 +59,12 @@ impl Weapon {
             let mut bullet: Bullet = self.weaponType.getBullet();
             bullet.setPosition(position);
             bullet.setDiection(direction);
-            bullet.update(terminal);
             self.bulletsShot.push(bullet);
         }
     }
 
-    pub fn reload(&mut self) { //Dont check for ammo, if u reload u throw the clip away
+    pub fn reload(&mut self) { 
+        //Dont check for ammo, if u reload u throw the clip away
         if self.clip > 0 {
             self.clip -= 1;
             self.ammo = self.clipSize;
@@ -82,7 +82,8 @@ impl Weapon {
         }
         for index in toRemove {
             let bullet = self.bulletsShot.remove(index);
-            terminal.eraseBox(bullet.getPosition());
+            // TODO if index >= vec.len it panics
+            //terminal.eraseBox(bullet.getPosition()); // TODO determine if this causes an error
         }
     }
 }

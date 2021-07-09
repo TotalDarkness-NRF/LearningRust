@@ -5,13 +5,15 @@ pub struct Position {
     y: u16,
 }
 
+impl Clone for Position {
+    fn clone(&self) -> Self {
+        Position::new(self.x, self.y)
+    }
+}
+
 impl Position {
     pub fn new(x: u16, y: u16) -> Self {
         Position {x, y}
-    }
-
-    pub fn copy(position: &Position) -> Self {
-        Position::new(position.x, position.y)
     }
 
     pub fn newOrigin() -> Self {
@@ -35,11 +37,11 @@ impl Position {
     }
 
     pub fn moveRight(&mut self) -> bool {
-        self.setX(self.x - 1)
+        self.setX(self.x + 1)
     }
 
     pub fn moveLeft(&mut self) -> bool {
-        self.setX(self.x + 1)
+        self.setX(self.x - 1)
     }
 
     pub fn setX(&mut self, x: u16) -> bool {

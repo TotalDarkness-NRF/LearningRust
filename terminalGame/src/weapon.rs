@@ -80,11 +80,12 @@ impl Weapon {
             }
             index += 1;
         }
+        toRemove.reverse(); // To avoid having changing index we remove from back first
         for index in toRemove {
             let bullet = self.bulletsShot.remove(index);
-            // TODO if index >= vec.len it panics
-            //terminal.eraseBox(bullet.getPosition()); // TODO determine if this causes an error
+            terminal.eraseBox(bullet.getPosition());
         }
+        
     }
 }
 

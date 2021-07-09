@@ -31,24 +31,25 @@ impl Game {
     }
 
     pub fn start(&mut self) {
-        let stdin = stdin();
         self.terminal.begin();
-        // TODO the game only updates during key inputs
-        for key in stdin.keys() {
-            self.terminal.write(format!(
-                "{}{}",
-                termion::cursor::Goto(1, 1),
-                termion::clear::CurrentLine
-            ));
-            self.handleKey(key.unwrap());
+        self.gameloop();
+        
+    }
 
+    fn gameloop(&mut self) {
+        for key in stdin().keys() {
+            // TODO the game only updates during key inputs
             let bound = Terminal::getBoundaries();
             self.terminal.write(format!(
-                "{} {} {}",
+                "{}{}{} {} {}",
+                termion::cursor::Goto(1, 1),
+                termion::clear::CurrentLine,
                 bound.getX(),
                 bound.getY(),
                 self.character.to_string()
             ));
+
+            self.handleKey(key.unwrap());
             self.character.update(&mut self.terminal);
             self.terminal.flush();
         }

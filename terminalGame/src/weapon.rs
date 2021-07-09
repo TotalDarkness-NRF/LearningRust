@@ -56,8 +56,8 @@ impl Weapon {
         } else {
             self.ammo -= 1;
             let mut bullet: Bullet = self.weaponType.getBullet();
-            bullet.setPosition(position);
-            bullet.setDiection(direction);
+            bullet.position = position;
+            bullet.direction = direction;
             self.bulletsShot.push(bullet);
         }
     }
@@ -121,7 +121,7 @@ struct Bullet {
 }
 
 impl Bullet {
-    pub fn new(damage: u8, icon: char) -> Self {
+    fn new(damage: u8, icon: char) -> Self {
         Bullet {direction: Direction::None, position: Position::new(0, 0), timeAlive: 0, damage, icon}
     }
 
@@ -129,11 +129,11 @@ impl Bullet {
         Bullet::new(self.damage, self.icon)
     }
 
-    pub fn increaseTime(&mut self) {
+    fn increaseTime(&mut self) {
         self.timeAlive += 1;
     }
     
-    pub fn moves(&mut self, terminal: &mut Terminal) -> bool {
+    fn moves(&mut self, terminal: &mut Terminal) -> bool {
         terminal.eraseBox(&self.position);
         let hasMoved = match self.direction {
             Direction::Up => self.position.moveUp(),
@@ -146,7 +146,7 @@ impl Bullet {
         hasMoved
     }
 
-    pub fn update(&mut self, terminal: &mut Terminal) -> bool {
+    fn update(&mut self, terminal: &mut Terminal) -> bool {
         self.increaseTime();
         match self.direction {
             Direction::None => {self.timeAlive = 0; return false;},
@@ -154,15 +154,7 @@ impl Bullet {
         }
     }
 
-    pub fn setDiection(&mut self, dir: Direction) {
-        self.direction = dir;
-    }
-
-    pub fn getPosition(&self) -> &Position {
+    fn getPosition(&self) -> &Position {
         &self.position
-    }
-
-    pub fn setPosition(&mut self, pos: Position) {
-        self.position = pos;
     }
 }

@@ -33,8 +33,8 @@ impl Character {
     }
 
     pub fn update(&mut self, terminal: &mut Terminal) {
-        self.draw(terminal);
         self.weapon.updateBullets(terminal);
+        self.draw(terminal);
     }
 
     pub fn draw(&self, terminal: &mut Terminal) {

@@ -88,7 +88,7 @@ impl Weapon {
     }
 }
 
-enum WeaponType {
+enum WeaponType { //TODO remove the bullet paramater and use it like enemy types
     Pistol(Bullet),
     Shotgun(Bullet),
     Bow(Bullet),

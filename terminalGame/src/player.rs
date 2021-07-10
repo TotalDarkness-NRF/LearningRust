@@ -2,8 +2,8 @@ use termion::color::Color;
 use crate::{character::Character, position::{Direction, Position}, terminal::Terminal, weapon::Weapon};
 
 pub struct Player {
-    position: Position,
     health: u8,
+    position: Position,
     weapon: Weapon,
     color: Box<dyn Color>,
 }
@@ -56,6 +56,6 @@ impl Character for Player {
 
 impl Player {
     pub fn create(position: Position, color: Box<dyn Color>) -> Self {
-        Player{position, health: 20, weapon: Weapon::createPistol(), color}
+        Player{ health: 20, position, weapon: Weapon::createPistol(), color}
     }
 }

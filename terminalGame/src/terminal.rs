@@ -1,6 +1,6 @@
 use std::{fs::File, io::Write};
 
-use termion::{clear, color::{self, Color}, cursor, get_tty, raw::{IntoRawMode, RawTerminal}, screen, terminal_size};
+use termion::{clear, color::{self, Color}, cursor, get_tty, input::{Keys, TermRead}, raw::{IntoRawMode, RawTerminal}, screen, terminal_size};
 
 use crate::position::Position;
 
@@ -13,6 +13,10 @@ impl Terminal {
         Terminal {
             terminal: get_tty().unwrap().into_raw_mode().unwrap(),
         }
+    }
+
+    pub fn getKeys() -> Keys<File>{
+        get_tty().unwrap().keys()
     }
 
     pub fn write(&mut self, message: String) {

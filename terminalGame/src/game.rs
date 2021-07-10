@@ -3,13 +3,7 @@ use std::{process::exit, sync::mpsc::{Receiver, channel}, thread, time::Duration
 use rand::{prelude::ThreadRng, thread_rng};
 use termion::{color, event::Key};
 
-use crate::{
-    character::Character,
-    controls::Controls,
-    player::Player,
-    position::{Direction, Position},
-    terminal::Terminal,
-};
+use crate::{character::Character, controls::Controls, enemy::Enemy, player::Player, position::{Direction, Position}, terminal::Terminal};
 
 pub struct Game {
     character: Player,
@@ -25,7 +19,7 @@ impl Game {
         let (tx, rx) = channel();
 
         // Key inputs based off https://github.com/andrewhalle/termsnake
-        // Have to make a channel and send key events over it so that we don't block the main loop (This next causes infinite loop)
+        // Have to make a channel and send key events over it so that we don't block the main loop (The next() causes infinite loop)
         thread::spawn(move || {
             for key in Terminal::getKeys() {
                 tx.send(key.unwrap()).unwrap();
@@ -61,7 +55,7 @@ impl Game {
             self.handleEvents();
             self.character.update(&mut self.terminal);
             self.terminal.flush();
-            thread::sleep(Duration::from_millis(50)); // TODO see what we can do
+            thread::sleep(Duration::from_millis(10)); // TODO see what we can do
         }
     }
 
@@ -92,6 +86,8 @@ impl Game {
             self.character.attack(Direction::Down);
         } else if key == controls.attackRight {
             self.character.attack(Direction::Right);
+        } else if key == Key::Char('r') {
+            Enemy::new().draw(&mut self.terminal); // TODO remove later
         }
     }
 

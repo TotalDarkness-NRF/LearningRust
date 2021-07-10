@@ -1,3 +1,5 @@
+use rand::{Rng, thread_rng};
+
 use crate::terminal::Terminal;
 
 pub struct Position {
@@ -17,7 +19,14 @@ impl Position {
     }
 
     pub fn newOrigin() -> Self {
-        Position {x:1, y:2}
+        Position::new(1, 2)
+    }
+
+    pub fn newRandom() -> Self {
+        let mut rng = thread_rng();
+        let bounds = Terminal::getBoundaries();
+        let (x, y) = (rng.gen_range(1..bounds.getX()), rng.gen_range(2..bounds.getY()));
+        Position::new(x, y)
     }
 
     pub fn getX(&self) -> u16 {

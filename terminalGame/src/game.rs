@@ -1,7 +1,7 @@
-use std::{io::stdin, process::exit};
+use std::{process::exit, sync::mpsc::{Receiver, channel}, thread, time::Duration};
 
 use rand::{prelude::ThreadRng, thread_rng};
-use termion::{color, event::Key, input::TermRead};
+use termion::{color, event::Key};
 
 use crate::{
     character::Character,
@@ -17,28 +17,38 @@ pub struct Game {
     terminal: Terminal,
     controls: Controls,
     rng: ThreadRng,
+    events: Receiver<Key>,
 }
 
 impl Game {
     pub fn new() -> Self {
+        let (tx, rx) = channel();
+
+        // Key inputs based off https://github.com/andrewhalle/termsnake
+        // Have to make a channel and send key events over it so that we don't block the main loop (This next causes infinite loop)
+        thread::spawn(move || {
+            for key in Terminal::getKeys() {
+                tx.send(key.unwrap()).unwrap();
+            }
+        });
+        
         Game {
             character: Player::create(Position::newOrigin(), Box::new(color::LightRed)),
             points: 0,
             terminal: Terminal::getRaw(),
             controls: Controls::new(),
             rng: thread_rng(),
+            events: rx,
         }
     }
 
     pub fn start(&mut self) {
         self.terminal.begin();
         self.gameloop();
-        
     }
 
     fn gameloop(&mut self) {
-        for key in stdin().keys() {
-            // TODO the game only updates during key inputs
+        loop {
             let bound = Terminal::getBoundaries();
             self.terminal.write(format!(
                 "{}{}{} {} {}",
@@ -48,10 +58,17 @@ impl Game {
                 bound.getY(),
                 self.character.to_string()
             ));
-
-            self.handleKey(key.unwrap());
+            self.handleEvents();
             self.character.update(&mut self.terminal);
             self.terminal.flush();
+            thread::sleep(Duration::from_millis(50)); // TODO see what we can do
+        }
+    }
+
+    fn handleEvents(&mut self) {
+        match self.events.try_recv() {
+            Ok(key) => self.handleKey(key),
+            Err(_) => {}
         }
     }
 

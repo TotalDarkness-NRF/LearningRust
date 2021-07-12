@@ -48,6 +48,10 @@ impl Terminal {
             self.write(cursor::Restore.to_string());
         }
     }
+
+    pub fn clearAll(&mut self) {
+        self.write(format!("{}{}", clear::All, cursor::Goto::default()));
+    }
     
     pub fn flush(&mut self) {
         self.terminal.flush().unwrap();

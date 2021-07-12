@@ -2,6 +2,7 @@ use termion::event::Key;
 
 pub struct Controls {
     pub quit: Key,
+    pub reset: Key,
     pub up: Key,
     pub left: Key,
     pub down: Key,
@@ -16,6 +17,7 @@ impl Controls {
     pub fn new() -> Self {
         Controls {
             quit: Key::Char('q'),
+            reset: Key::Char('R'),
             up: Key::Char('w'),
             left: Key::Char('a'),
             down: Key::Char('s'),

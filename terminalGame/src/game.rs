@@ -1,6 +1,4 @@
 use std::{process::exit, sync::mpsc::{Receiver, channel}, thread, time::Duration};
-
-use rand::{prelude::ThreadRng, thread_rng};
 use termion::{color, event::Key};
 
 use crate::{character::Character, controls::Controls, enemy::Enemy, player::Player, position::{Direction, Position}, terminal::Terminal};
@@ -10,7 +8,6 @@ pub struct Game {
     points: u16,
     terminal: Terminal,
     controls: Controls,
-    rng: ThreadRng,
     events: Receiver<Key>,
 }
 
@@ -31,7 +28,6 @@ impl Game {
             points: 0,
             terminal: Terminal::getRaw(),
             controls: Controls::new(),
-            rng: thread_rng(),
             events: rx,
         }
     }
@@ -55,37 +51,38 @@ impl Game {
     }
 
     fn handleEvents(&mut self) {
-        match self.events.try_recv() {
-            Ok(key) => self.handleKey(key),
-            Err(_) => {}
+        if let Ok(key) = self.events.try_recv() {
+            self.handleKey(key);
         }
     }
 
     fn handleKey(&mut self, key: Key) {
-        let player = &mut self.player;
         let controls: &Controls = &self.controls;
         if key == controls.quit {
             self.quit();
         } else if key == controls.reset {
             self.reset();
-        } else if key == controls.up {
-            player.moves(&mut self.terminal, Direction::Up);
-        } else if key == controls.left {
-            player.moves(&mut self.terminal, Direction::Left);
-        } else if key == controls.down {
-            player.moves(&mut self.terminal, Direction::Down);
-        } else if key == controls.right {
-            player.moves(&mut self.terminal, Direction::Right);
-        } else if key == controls.attackUp {
-            player.attack(Direction::Up);
-        } else if key == controls.attackLeft {
-            player.attack(Direction::Left);
-        } else if key == controls.attackDown {
-            player.attack(Direction::Down);
-        } else if key == controls.attackRight {
-            player.attack(Direction::Right);
-        } else if key == Key::Char('r') {
-            Enemy::new().draw(&mut self.terminal); // TODO remove later
+        } else {
+            let player = &mut self.player;
+            if key == controls.up {
+                player.moves(&mut self.terminal, Direction::Up);
+            } else if key == controls.left {
+                player.moves(&mut self.terminal, Direction::Left);
+            } else if key == controls.down {
+                player.moves(&mut self.terminal, Direction::Down);
+            } else if key == controls.right {
+                player.moves(&mut self.terminal, Direction::Right);
+            } else if key == controls.attackUp {
+                player.attack(Direction::Up);
+            } else if key == controls.attackLeft {
+                player.attack(Direction::Left);
+            } else if key == controls.attackDown {
+                player.attack(Direction::Down);
+            } else if key == controls.attackRight {
+                player.attack(Direction::Right);
+            } else if key == Key::Char('r') {
+                Enemy::new().draw(&mut self.terminal); // TODO remove later just for testing
+            }
         }
     }
 
@@ -95,8 +92,8 @@ impl Game {
     }
 
     fn reset(&mut self) {
-        self.player = Player::create(Position::newOrigin(), Box::new(color::LightRed));
         self.points = 0;
+        self.player = Player::create(Position::newOrigin(), Box::new(color::LightRed));
         self.terminal.clearAll();
     }
 

@@ -148,10 +148,11 @@ impl Bullet {
 
     fn update(&mut self, terminal: &mut Terminal) -> bool {
         self.increaseTime();
-        match self.direction {
-            Direction::None => {self.timeAlive = 0; return false;},
-            _ => self.moves(terminal),
+        if let Direction::None = self.direction {
+            self.timeAlive = 0;
+            return false;
         }
+        self.moves(terminal)
     }
 
     fn getPosition(&self) -> &Position {
